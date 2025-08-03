@@ -20,7 +20,7 @@ struct PhoneNumberView: View {
                 Text("Get OTP")
                 
                 Text("Enter Your \nPhone Number")
-                    .font(.title)
+                    .font(.system(size: 30))
                     .fontWeight(.bold)
                     .multilineTextAlignment(.leading)
                 
@@ -36,7 +36,7 @@ struct PhoneNumberView: View {
                 
             }
             .navigationDestination(for: String.self) { number in
-                OtpVerficationView(phoneNumber: number)
+                OtpVerficationView(phoneNumber: number, path: $path)
             }
             
             Spacer()
@@ -57,7 +57,7 @@ struct PhoneNumberView: View {
                     .tint(.primary)
             }
             
-            TextField("Enter Your Phone Number", text: $phoneNumber)
+            TextField("", text: $phoneNumber)
                 .padding(.vertical, 10)
                 .padding(.horizontal, 14)
                 .keyboardType(.numberPad)
