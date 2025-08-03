@@ -7,5 +7,6 @@
 import SwiftUI
 
 extension Color {
-    static let appPrimary = Color("AppPrimaryYellow")
+    static let appPrimary = Color("PrimaryYellow")
+    static let appWhite = Color("White")
 }

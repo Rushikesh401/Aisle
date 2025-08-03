@@ -28,15 +28,21 @@ struct PhoneNumberView: View {
                 
                 RoundedButton(text: "Continue") {
                     if phoneNumber.count == characterLimit {
-                        path.append(phoneNumber)
+                        path.append(AppRoute.otpVerification(phoneNumber: phoneNumber))
                     }
                 }
                 .disabled(phoneNumber.count != characterLimit)
 
                 
             }
-            .navigationDestination(for: String.self) { number in
-                OtpVerficationView(phoneNumber: number, path: $path)
+            .navigationDestination(for: AppRoute.self) { route in
+                switch route {
+                    case .otpVerification(let phoneNumber):
+                    OtpVerficationView(phoneNumber: phoneNumber, path: $path)
+                    
+                case .notes:
+                    NotesView()
+                }
             }
             
             Spacer()
