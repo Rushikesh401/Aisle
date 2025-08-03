@@ -14,14 +14,13 @@ struct TimerView: View {
     
     var body: some View {
         
-        Text("00 : \(timeRemaining)")
+        Text(String(format: "00 : %02d", timeRemaining))
             .font(.title3)
             .fontWeight(.bold)
             .monospacedDigit()
-            .onTapGesture {
+            .onAppear{
                 startTimer()
             }
-       
     }
     
     private func startTimer() {
@@ -31,7 +30,6 @@ struct TimerView: View {
             } else {
                 timer?.invalidate()
             }
-            
         }
     }
 }

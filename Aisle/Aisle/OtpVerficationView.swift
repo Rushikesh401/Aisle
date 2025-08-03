@@ -13,7 +13,8 @@ struct OtpVerficationView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var otp : String = ""
-    
+    @State private var otpCharacterLimit : Int = 4
+
     var body: some View {
         VStack(alignment: .leading){
             
@@ -36,7 +37,8 @@ struct OtpVerficationView: View {
             
             
             TextField("", text: $otp)
-                .padding([.horizontal, .vertical], 14)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 14)
                 .keyboardType(.numberPad)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
@@ -46,6 +48,21 @@ struct OtpVerficationView: View {
                 .font(.system(size: 18))
                 .fontWeight(.bold)
                 .frame(width: 78, height: 36)
+                .onChange(of: otp) { newValue in
+                    if newValue.count > otpCharacterLimit {
+                        otp = String(newValue.prefix(otpCharacterLimit))
+                    }
+                }
+            
+            HStack(spacing: 8) {
+                RoundedButton(text: "Continue") {
+                    
+                }
+                .disabled(otp.count != otpCharacterLimit)
+                
+                    TimerView()
+            }
+            
             
         }
         .navigationBarBackButtonHidden(true)
@@ -63,3 +80,4 @@ struct OtpVerficationPreviewWrapper: View {
         OtpVerficationView(phoneNumber: "9999999999", path: $path)
     }
 }
+
