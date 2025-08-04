@@ -16,12 +16,14 @@ struct OtpVerficationView: View {
     @State private var otpCharacterLimit : Int = 4
     @State private var showToast = false
     
+    @StateObject private var viewModel = OTPVerificationViewModel()
+    
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
                 
                 HStack(spacing: 10){
-                    Text("+91 \(phoneNumber)")
+                    Text(phoneNumber)
                         .font(.system(size: 18, weight: .medium))
                     
                     Button{
@@ -59,11 +61,11 @@ struct OtpVerficationView: View {
                 
                 HStack(spacing: 8) {
                     RoundedButton(text: "Continue") {
-                        path.append(AppRoute.notes)
+                       handleButtonAction()
                     }
                     .disabled(otp.count != otpCharacterLimit)
                     
-                    TimerView(showToast: $showToast)
+                    TimerView()
                 }
                 Spacer()
                 
@@ -71,7 +73,7 @@ struct OtpVerficationView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
                         
             if showToast {
-                ToastView(toastMessage: "Please try again", backgroundColor: Color.appPrimary, foregroundColor: .black)
+                ToastView(toastMessage: "OTP is invalid", backgroundColor: Color.appPrimary, foregroundColor: .black)
                     .transition(.slide)
                     .animation(.easeInOut, value: showToast)
                     .onAppear{
@@ -82,6 +84,16 @@ struct OtpVerficationView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+    }
+    
+    fileprivate func handleButtonAction() {
+        viewModel.verifyOTP(phoneNumber, otp) { isValid in
+            if isValid {
+                path.append(AppRoute.notes)
+            } else {
+                showToast.toggle()
+            }
+        }
     }
 }
 

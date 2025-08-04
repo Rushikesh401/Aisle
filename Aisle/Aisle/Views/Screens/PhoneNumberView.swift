@@ -14,6 +14,8 @@ struct PhoneNumberView: View {
     @State private var characterLimit : Int = 10
     @State private var path = NavigationPath()
     
+    @StateObject private var vm = PhoneNumberViewModel()
+    
     var body: some View {
         NavigationStack(path: $path) {
             VStack(alignment : .leading, spacing: 10) {
@@ -27,23 +29,23 @@ struct PhoneNumberView: View {
                 phoneNumberInputField
                 
                 RoundedButton(text: "Continue") {
-                    if phoneNumber.count == characterLimit {
-                        path.append(AppRoute.otpVerification(phoneNumber: phoneNumber))
-                    }
+                    vm.verifyMobileNumber(countryCode+phoneNumber)
                 }
                 .disabled(phoneNumber.count != characterLimit)
-
                 
             }
             .navigationDestination(for: AppRoute.self) { route in
                 switch route {
                     case .otpVerification(let phoneNumber):
-                    OtpVerficationView(phoneNumber: phoneNumber, path: $path)
+                    OtpVerficationView(phoneNumber: countryCode+phoneNumber, path: $path)
                     
                 case .notes:
                     NotesView()
                 }
+            }.onChange(of: vm.isValidNumber) { newValue in
+                if newValue {path.append(AppRoute.otpVerification(phoneNumber: phoneNumber))}
             }
+
             
             Spacer()
         }
