@@ -11,6 +11,7 @@ struct TimerView: View {
     
     @State private var timeRemaining = 60
     @State private var timer: Timer? = nil
+    @Binding var showToast : Bool
     
     var body: some View {
         
@@ -30,6 +31,8 @@ struct TimerView: View {
             } else {
                 timer?.invalidate()
             }
+            
+            if timeRemaining == 0 {showToast.toggle()}
         }
     }
 }
@@ -37,5 +40,6 @@ struct TimerView: View {
         
        
 #Preview {
-    TimerView()
+    TimerView(showToast: .constant(false))
 }
+

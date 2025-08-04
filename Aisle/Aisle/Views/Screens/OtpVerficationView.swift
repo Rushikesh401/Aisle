@@ -14,8 +14,10 @@ struct OtpVerficationView: View {
     
     @State private var otp : String = ""
     @State private var otpCharacterLimit : Int = 4
+    @State private var showToast = false
     
     var body: some View {
+        ZStack {
             VStack(alignment: .leading) {
                 
                 HStack(spacing: 10){
@@ -61,15 +63,26 @@ struct OtpVerficationView: View {
                     }
                     .disabled(otp.count != otpCharacterLimit)
                     
-                    TimerView()
+                    TimerView(showToast: $showToast)
                 }
-                
                 Spacer()
                 
             }
-            .navigationBarBackButtonHidden(true)
             .frame(maxWidth: .infinity, alignment: .leading)
+                        
+            if showToast {
+                ToastView(toastMessage: "Please try again", backgroundColor: Color.appPrimary, foregroundColor: .black)
+                    .transition(.slide)
+                    .animation(.easeInOut, value: showToast)
+                    .onAppear{
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            showToast = false
+                        }
+                    }
+            }
         }
+        .navigationBarBackButtonHidden(true)
+    }
 }
 
 #Preview {
