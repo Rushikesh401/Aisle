@@ -6,6 +6,6 @@
 //
 enum AppRoute: Hashable {
     case otpVerification(phoneNumber : String)
-    case notes
+    case notes(token: String)
 }
 

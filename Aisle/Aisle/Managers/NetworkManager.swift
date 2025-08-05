@@ -12,7 +12,7 @@ final class NetworkManager{
     static let baseURL = "https://app.aisle.co/V1"
     static let phoneNumberEnpoint = "/users/phone_number_login" // POST
     static let OTPEnpoint = "/users/verify_otp" // POST
-    static let notesEnpoint = "/users/verify_otp" // GET
+    static let notesEnpoint = "/users/test_profile_list" // GET
     
     private init() {}
     
@@ -42,6 +42,8 @@ final class NetworkManager{
                     return
                 }
             }
+        
+        print("request> \(request) \(String(describing: headers?.values))")
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {

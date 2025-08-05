@@ -39,8 +39,8 @@ struct PhoneNumberView: View {
                     case .otpVerification(let phoneNumber):
                     OtpVerficationView(phoneNumber: countryCode+phoneNumber, path: $path)
                     
-                case .notes:
-                    NotesView()
+                case .notes(let token):
+                    NotesView(token: token)
                 }
             }.onChange(of: vm.isValidNumber) { newValue in
                 if newValue {path.append(AppRoute.otpVerification(phoneNumber: phoneNumber))}

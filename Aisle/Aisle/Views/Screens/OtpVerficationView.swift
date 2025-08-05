@@ -88,8 +88,8 @@ struct OtpVerficationView: View {
     
     fileprivate func handleButtonAction() {
         viewModel.verifyOTP(phoneNumber, otp) { isValid in
-            if isValid {
-                path.append(AppRoute.notes)
+            if isValid , let token = viewModel.token {
+                path.append(AppRoute.notes(token: token))
             } else {
                 showToast.toggle()
             }

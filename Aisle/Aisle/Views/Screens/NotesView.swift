@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct NotesView: View {
+    let token : String
+    
+    @StateObject private var viewModel = NotesViewModel()
+    
     var body: some View {
         TabView {
             
@@ -18,7 +22,7 @@ struct NotesView: View {
                     
                 }
             
-            UserProfileView()
+            UserProfileView(notesViewModel: viewModel)
                 .tabItem {
                     Image("inbox")
                     Text("Notes")
@@ -41,11 +45,15 @@ struct NotesView: View {
         }
         .accentColor(Color.black)
         .navigationBarBackButtonHidden(true)
+        .onAppear{
+            viewModel.fetchNotes(token)
+        }
+           
     }
 }
 
 #Preview {
-    NotesView()
+    NotesView(token: "")
 }
 
 struct ChatView : View {
@@ -67,6 +75,7 @@ struct DiscoverView : View {
 }
 
 struct UserProfileView : View {
+    var notesViewModel : NotesViewModel
     var body: some View {
         VStack(spacing: 8){
             Text("Notes")
@@ -76,16 +85,23 @@ struct UserProfileView : View {
                 .font(.system(size: 18, weight: .medium))
             
             ZStack(alignment: .bottomLeading) {
-                Image("profile")
-                    .frame(width: 344, height: 344)
-                    .cornerRadius(20)
+                AsyncImage(url: URL(string: notesViewModel.notes?.invites.profiles[0].photos[1].photo ?? "")) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 344, height: 344)
+                        .cornerRadius(20)
+                } placeholder: {
+                    ProgressView()
+                        .frame(width: 344, height: 344)
+                }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Meena, 23")
+                    Text("\(getNameAndAge().0) , \(getNameAndAge().1)" )
                         .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(Color.appWhite)
                     
-                    Text("Tap to reviwe 50+ notes")
+                    Text(notesViewModel.notes?.invites.profiles[0].generalInformation.location.full ?? "")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(Color.appWhite)
                 }
@@ -96,5 +112,10 @@ struct UserProfileView : View {
             Spacer()
             
         }
+    }
+    
+    private func getNameAndAge() -> (String, Int){
+        return (notesViewModel.notes?.invites.profiles[0].generalInformation.firstName ?? "Meena", notesViewModel.notes?.invites.profiles[0].generalInformation.age ?? 23 )
+        
     }
 }
